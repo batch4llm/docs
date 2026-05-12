@@ -1,0 +1,40 @@
+---
+title: Best Practices for Researchers
+---
+
+This guide covers tips to improve the reproducibility and transparency of your batches.
+LLMs can behave like black boxes, their outputs may vary over time, even in identical environments.
+It is therefore important for scientific work to precisely document all requests and settings.
+The habits and settings below help reduce that variability.
+
+### Export all batch information
+
+When exporting a batch, include everything available: the raw input and output text, the model's hyperparameters, and the exact date and time of each request. This gives you a complete record you can reference or share later.
+
+### Use model snapshots
+
+Model providers often update their models in the background without changing the version name. These silent updates can affect outputs and reduce reproducibility. Use a snapshot name instead of a general version name to ensure consistent results over time.
+
+**Example:** Use `gpt-5.5-2026-04-23` instead of `gpt-5.5`.
+
+:::note
+Not all providers offer snapshot names. Token costs for older snapshots can sometimes be higher than for the latest version.
+:::
+
+### Archive instead of delete
+
+When you no longer need a prompt, file, or endpoint, use the **archive** feature instead of deleting it. Deleted resources can break batch exports. Archived resources stay available for export and auditing, but stay out of your way.
+
+### Use seeds for exact reproduction
+
+Some models return a seed value alongside their output. This seed records the random decisions the model made. If you save the seed and use it again with the same model snapshot, you can reproduce the exact same output.
+
+Always save the seed when it is available. Include it in your batch export so you can re-run a batch identically if needed.
+
+### Write self-contained prompts
+
+Prompts should be clear and complete on their own. Avoid references to external context or assumptions about what the model already knows. A well-written prompt makes it easier for others to understand what was asked and why the model responded the way it did.
+
+### Version your prompts
+
+Small changes to a prompt can lead to very different outputs. Treat prompts like code: give each version a clear name or number, and avoid editing a prompt that was used in a finished batch. Create a new prompt instead. This keeps a clear link between your results and the exact instruction that produced them.

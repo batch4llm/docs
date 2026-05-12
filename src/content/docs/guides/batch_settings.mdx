@@ -1,0 +1,17 @@
+---
+title: Batch Settings
+---
+
+When creating a new batch, you can configure several settings. Most of them cover the selection of your model, files, and prompt. This page explains the queue and dispatcher settings.
+
+**Model settings** are hyperparameters passed directly to the LLM client. They control how the model generates output. If you are unfamiliar with LLM hyperparameters, refer to your provider's documentation.
+
+### Queue and dispatcher settings
+
+| Setting | Explanation |
+|---|---|
+| `max_task_per_minute` | The maximum number of API requests sent per minute. Set this to match your provider's RPM limit. |
+| `max_parallel_tasks` | The number of API requests that can run at the same time. In most cases, keep this at `1`. |
+| `max_retries` | The number of times the entire batch is retried after a failure. Once this limit is reached, the batch is marked as failed. |
+| `retries_per_failed_task` | The number of times a single task is retried before it is marked as failed. |
+| `queue_batch` | If set to `true`, the batch waits until all other running batches on the same endpoint finish before starting. If set to `false`, the batch starts immediately. Running batches in parallel increases the total RPM on the endpoint, which is likely to cause rate limit errors on commercial providers. |

@@ -1,0 +1,71 @@
+---
+title: Quickstart
+description: A short guide to take you through the most important features.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Get started with Batch4LLM. This guide shows you how to extract the title from a set of PDF documents.
+
+**What you need:**
+- A running Batch4LLM instance (local or hosted)
+- PDF documents to process
+- A Gemini API key (this guide uses Gemini, but all providers work)
+
+:::tip[First batch?]{icon="information"}
+If this is your first time, follow the steps below. Start with no more than 10 documents so you can see results quickly.
+:::
+
+<Steps>
+
+1. ### Create an endpoint
+
+    :::caution
+    Your API key cannot be seen by other users in the frontend. However, your administrator and anyone with backend access can see it. Make sure you trust your platform. Set a spending limit on your key before using it.
+    :::
+
+    An endpoint connects Batch4LLM to an LLM provider. To create one, open the **Sidebar** and click `Endpoints`. Then click `Add Endpoint` in the top right corner.
+
+    In the pop-up, select `Gemini` as the provider. Enter `"gemini"` as the name and paste your Gemini API key. Click `Test connection` to verify it works. Once the test passes, click `Add Endpoint`.
+
+2. ### Create a prompt
+
+    A prompt is the instruction sent to the model for each document. Open the **Sidebar** and click `Prompts`. Then click `Add Prompt` in the top right corner.
+
+    Enter `"Retrieve pdf title"` as the name. Paste the following into the text box:
+
+    ```
+    Your given a pdf document. Please extract the title from it.
+    Only answer with the document title without
+    any formatting or additional information.
+    ```
+
+    Leave all other settings as they are and click `Add Prompt`.
+
+3. ### Upload your documents
+
+    Go to `Files` and click `Upload Files`. Either click the file box to browse your files, or drag and drop them in. Your files will appear in a list below the box.
+
+    Type `My documents` in the file tag field and press Enter. Then click `Upload files`. Uploading may take a few seconds or a few minutes depending on how many files you have.
+
+4. ### Create a batch
+
+    A batch processes your documents using your chosen endpoint and prompt. Go to `Batches` in the **Sidebar** and click `Create Batch`.
+
+    In the pop-up, select `"gemini"` from the first dropdown. Then pick a model — for this guide, select `gemini-2.5-flash`. Next, select the prompt you just created. For the file reader, choose `pymupdf_default`. It works well for most standard PDFs.
+
+    Leave all other settings as they are and click `Start Batch`. Wait for the batch to finish.
+
+    :::note[What happens in the backend?]{icon="server"}
+    The backend reads each document using the selected PDF reader. It then sends one API request per document, using your chosen prompt. Each document is processed in its own context window. This means you cannot use the prompt to compare or combine multiple documents.
+    :::
+
+    When the batch is done, you will see a green indicator. Click on the batch to see a list of all documents and their status.
+
+5. ### Export your results
+
+    Click the `Export Icon` on your finished batch. Leave the settings in the pop-up as they are and click `Export`. Allow downloads in your browser if prompted.
+
+</Steps>
+
+You're done! You just processed a set of documents with a prompt and exported the results.

@@ -1,0 +1,43 @@
+---
+title: Error Handling
+---
+
+At some point you will run into a failed batch or another issue. This guide covers the most common problems and how to fix them.
+
+:::note
+Before reading on, make sure you understand the different [batch settings](/guides/batch_settings/) and what they do. This will help you understand why batches fail.
+:::
+
+### My batch failed — what do I do?
+
+Start by checking the batch log. It will tell you why the batch failed.
+
+Most failures come down to one of two causes:
+
+- The batch hit the request limit too often
+- The batch settings are incompatible with the selected endpoint or model
+
+### Avoiding request limit errors
+
+Check your **RPM** (requests per minute) and **TPM** (tokens per minute) limits on your provider's dashboard. Set the RPM in your batch settings to match. If you are processing large files, lower it further.
+
+You can also enable **Intelligent Retry**, which lets the system adjust the RPM automatically when it detects limit errors.
+
+If your batch does not need to finish by a specific time, consider using **Provider Batches**. This offloads processing to the provider's side and usually completes within 24 hours — typically at 50% lower cost.
+
+:::note
+**Intelligent Retry** is not yet available. It will be added in a future update.
+
+Not all endpoints support Provider Batches.
+:::
+
+### Incompatible settings
+
+Not all settings work with every provider or model. The app currently does not warn you about incompatible combinations before you start a batch. Check the list below before running one.
+
+| Setting | Limitation |
+|---|---|
+| **File Upload** (instead of a file reader) | Only supported by Gemini, OpenAI, and Anthropic |
+| **Provider Batches** | Only supported by Anthropic and OpenAI. Does not work together with File Upload |
+| **Structured JSON output** | Not supported by some open source models / plattforms |
+| **Structured JSON output** | Models that support it often require the word `json` to appear at least once in the prompt |
