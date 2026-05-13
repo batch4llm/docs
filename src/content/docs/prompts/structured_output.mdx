@@ -1,0 +1,43 @@
+---
+title: Structured Outputs
+---
+
+Use structured JSON output when you want to extract specific fields from your documents for further processing. Make sure your prompt also tells the model how to format the output.
+
+In this example, we extract the following fields: title, authors, published date, category, page count, and whether the document contains pictures. Here's the prompt:
+
+```
+Please extract the following information from the provided document. Do not use any other sources.
+
+The document title. All authors separated by a comma — if there are no authors, set the field to null. The date the document was
+published in the format "DD.MM.YYYY" — if unknown, set the field to null. The number of pages. Whether the document includes any pictures.
+
+Example JSON output:
+{
+    "title": "A document title",
+    "authors": "Ben, Lisa",
+    "published_date": "10.12.2004",
+    "page_numbers": 14,
+    "pictures_included": true
+}
+```
+
+It's important to tell the model exactly how to return the data. When using JSON output, including the word `json` in your prompt is often required.
+
+### Export the data
+
+Once your batch is done, the model's consistent JSON output can be converted into a spreadsheet. Click the `Export Icon` and select `json long format` as the interpretation method.
+
+Here's what the table looks like for this example:
+
+| file_name         | _title                 | _authors  | _published_date | _page_numbers | _pictures_included |
+|-------------------|------------------------|-----------|-----------------|---------------|--------------------|
+| **example-1.pdf** | A document title       | Ben, Lisa | 10.12.2004      | 14            | True               |
+| **example-2.pdf** | Another document title | null      | null            | 1             | False              |
+| **example-3.pdf** | Beautiful title        | Fine      | 17.02.2016      | 7             | True               |
+
+:::note[Why the underscores _ before column names?]
+Underscores are added automatically to avoid naming conflicts with system columns.
+
+For example, if your output had a field called `id`, it would clash with the system `id` column. To keep things clear: columns **without** an underscore contain system information (like model name and temperature), while columns **with** an underscore come from your structured output.
+:::

@@ -1,0 +1,43 @@
+---
+title: Multi-row interpretations
+---
+
+In this guide, you'll learn how to get multiple rows per document from your model. This is called **long format**. It's useful in scientific evaluation when you need to compare different data sets.
+
+Say you have three questions:
+1. Is this a scientific document?
+2. Does this document provide sources?
+3. Was this document published before 2020?
+
+### Target output
+
+| file_name         | _id | _answer |
+|-------------------|-----|---------|
+| **example-1.pdf** | 1   | True    |
+| **example-1.pdf** | 2   | False   |
+| **example-1.pdf** | 3   | False   |
+| **example-2.pdf** | 1   | False   |
+| **example-2.pdf** | 2   | True    |
+| **example-2.pdf** | 3   | False   |
+
+### Prompt instructions
+
+To put each answer in its own row, instruct the model to return a JSON array with one element per question.
+
+Here's an example prompt:
+
+```
+Please answer the following questions.
+1. Is this a scientific document?
+2. Does this document provide sources?
+3. Was this document published before 2020?
+
+Return your answers in this JSON format:
+{
+    [
+        { "id": 1, "answer": True  },
+        { "id": 2, "answer": False },
+        { "id": 3, "answer": True  }
+    ]
+}
+```

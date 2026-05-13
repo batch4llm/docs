@@ -1,0 +1,50 @@
+---
+title: Multi Prompt
+---
+
+Multi prompts let you split one prompt into several steps, each with its own context. This is useful for complex tasks or smaller models that struggle with multiple questions at once.
+
+:::caution
+This is a beta feature. It will have breaking changes in the next update. Do not use it in production workflows.
+:::
+
+### How do I use multi prompts?
+
+Multi prompts work by splitting one prompt into smaller ones. To get started, add a new prompt and enable the `Multi Prompt` checkbox. Your prompt must use the following JSON format:
+
+```json
+{
+    "multi_prompt_v1": {
+       "pre": "You are a helpful assistant.",
+       "tasks": [
+          { "id": "1", "prompt": "What is the document title?"},
+          { "id": "2", "prompt": "Does the document have any authors?"}
+       ],
+       "post": "Please only refer to the provided document."
+    }
+}
+```
+
+Instead of one request per document, two API requests will be made. For this example, the prompts will look like this:
+
+**First prompt**
+```
+You are a helpful assistant.
+What is the document title?
+Please only refer to the provided document.
+```
+
+**Second prompt**
+```
+You are a helpful assistant.
+Does the document have any authors?
+Please only refer to the provided document.
+```
+
+:::caution
+Multi prompts increase your costs. In this example, costs triple because three requests are made per document.
+:::
+
+### What is the ID for?
+
+The ID helps you identify which prompt produced which result. It appears in the `prompt_marker` column when you export your data.

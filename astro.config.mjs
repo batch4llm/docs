@@ -19,6 +19,14 @@ export default defineConfig({
 						{ label: 'Researcher Guide', slug: 'guides/researcher_guide' },
 					],
 				},
+				{
+					label: 'Prompts',
+					items: [
+						{ label: 'Structured Output', slug: 'prompts/structured_output' },
+						{ label: 'Multi Row Interpretation', slug: 'prompts/multi_row_interpretation' },
+						{ label: 'Multi Prompt', slug: 'prompts/multi_prompt' },
+					],
+				},
 			],
 		}),
 	],

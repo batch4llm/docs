@@ -35,9 +35,9 @@ Not all endpoints support Provider Batches.
 
 Not all settings work with every provider or model. The app currently does not warn you about incompatible combinations before you start a batch. Check the list below before running one.
 
-| Setting | Limitation |
-|---|---|
-| **File Upload** (instead of a file reader) | Only supported by Gemini, OpenAI, and Anthropic |
-| **Provider Batches** | Only supported by Anthropic and OpenAI. Does not work together with File Upload |
-| **Structured JSON output** | Not supported by some open source models / plattforms |
-| **Structured JSON output** | Models that support it often require the word `json` to appear at least once in the prompt |
+| Setting                                    | Limitation                                                                                 |
+|--------------------------------------------|--------------------------------------------------------------------------------------------|
+| **File Upload** (instead of a file reader) | Only supported by Gemini, OpenAI, and Anthropic                                            |
+| **Provider Batches**                       | Only supported by Anthropic and OpenAI. Does not work together with File Upload            |
+| **Structured JSON output**                 | Not supported by some open source models / plattforms                                      |
+| **Structured JSON output**                 | Models that support it often require the word `json` to appear at least once in the prompt |

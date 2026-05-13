@@ -8,7 +8,7 @@ hero:
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Get started
+    - text: Documentation
       link: /guides/quickstart/
       icon: right-arrow
     - text: Go to Batch4LLM
@@ -19,18 +19,21 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## What Batch4LLM can do?
 
 <CardGrid stagger>
-	<Card title="Quickstart" icon="rocket">
-		[Click here](/guides/quickstart/) to quickly start your first batch.
-        You will learn how you connect to an endpoint, create a prompt, upload your documents and start a batch.
+	<Card title="Process file sets with LLMs" icon="rocket">
+        You can setup a batch running huge number of files against an LLM with your custom prompt in minutes.
 	</Card>
-	<Card title="What model should I use?" icon="document">
-        This depends on the complexity of your tasks. For most prompts small models like
-        `gemini-2.5-flash`, `gpt-4o-mini` or `claude-haiku-4-5-20251001` will be good enough.
+	<Card title="Connect to any LLM Provider" icon="star">
+        All popular LLM providers are supported, including OpenAI, Gemini, Anthropic, DeepSeek and Mistral.
+        And you can also configure a custom base url with the openai client.
 	</Card>
-	<Card title="Scientific evaluation" icon="setting">
-		Batch4LLM works perfectly to evaluate
+	<Card title="Provider features" icon="puzzle">
+		Provider specific features like file uploads, provider sided batches and structured outputs are fully supported.
 	</Card>
+    <Card title="Export as excel" icon="cloud-download">
+        With just two clicks you can export your batches as an excel spreadsheet or csv.
+        Containing either just your results or all the data you need for scientific evaluation.
+    </Card>
 </CardGrid>
