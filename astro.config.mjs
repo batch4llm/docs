@@ -14,17 +14,9 @@ export default defineConfig({
 					label: 'Get started',
 					items: [
 						{ label: 'Quickstart', slug: 'guides/quickstart' },
+						{ label: 'Prompts', slug: 'guides/prompts' },
 						{ label: 'Batch Settings', slug: 'guides/batch_settings' },
 						{ label: 'Error Handling', slug: 'guides/error_handling' },
-						{ label: 'Researcher Guide', slug: 'guides/researcher_guide' },
-					],
-				},
-				{
-					label: 'Prompts',
-					items: [
-						{ label: 'Structured Output', slug: 'prompts/structured_output' },
-						{ label: 'Multi Row Interpretation', slug: 'prompts/multi_row_interpretation' },
-						{ label: 'Multi Prompt', slug: 'prompts/multi_prompt' },
 					],
 				},
 			],

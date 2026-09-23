@@ -6,13 +6,28 @@ When creating a new batch, you can configure several settings. Most of them cove
 
 **Model settings** are hyperparameters passed directly to the LLM client. They control how the model generates output. If you are unfamiliar with LLM hyperparameters, refer to your provider's documentation.
 
+By default, none of these parameters are set — the model's own default is used instead. In most cases, the API does not return what that default value is, so you only know the exact value if you set it yourself.
+
+### Model settings
+
+| Setting       | Explanation                                                                     |
+|---------------|----------------------------------------------------------------------------------|
+| Answer Format | Either Text or JSON. When set to JSON, the model is forced to only return valid JSON output. |
+
 ### Queue and dispatcher settings
 
 | Setting                   | Explanation                                                                                                                                                                                                                                                                                              |
 |---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `max_task_per_minute`     | The maximum number of API requests sent per minute. Set this to match your provider's RPM limit.                                                                                                                                                                                                         |
-| `max_parallel_tasks`      | The number of API requests that can run at the same time. In most cases, keep this at `1`.                                                                                                                                                                                                               |
-| `max_retries`             | The number of times the entire batch is retried after a failure. Once this limit is reached, the batch is marked as failed.                                                                                                                                                                              |
-| `retries_per_failed_task` | The number of times a single task is retried before it is marked as failed.                                                                                                                                                                                                                              |
-| `queue_batch`             | If set to `true`, the batch waits until all other running batches on the same endpoint finish before starting. If set to `false`, the batch starts immediately. Running batches in parallel increases the total RPM on the endpoint, which is likely to cause rate limit errors on commercial providers. |
-| `queue_batch`             | If set to `true`, the batch waits until all other running batches on the same endpoint finish before starting. If set to `false`, the batch starts immediately. Running batches in parallel increases the total RPM on the endpoint, which is likely to cause rate limit errors on commercial providers. |
+| Adaptive Rate Limiting    | Either On or Off. Should be left On in almost all cases, as it automatically adjusts the request rate to the API and lowers it when rate limit exceptions occur. Exception: if you are using a self-hosted LLM API, it can be worth turning this off for speed and setting the request rate yourself (more on this below).                                                                                                                                    |
+| Tasks / min               | The maximum number of API requests sent per minute. Set this to match your provider's RPM limit. If Adaptive Rate Limiting is on, this only sets the starting value — it is adjusted automatically afterwards.                                                                                          |
+| Allow Concurrency         | Either On or Off (default: On). When on, multiple API requests can run at the same time instead of one after another.                                                                                                                                                                  |
+| Retries / Failed Task     | The number of times a single task is retried before it is marked as failed. If Adaptive Rate Limiting is on, rate limit errors do not count towards this limit.                                                                                                                                          |
+| Failure Threshold         | A percentage. If the share of failed tasks in the batch exceeds this value, the batch is stopped automatically.                                                                                                                                                                              |
+
+:::tip[Self-hosted LLM APIs]
+If you are certain that the API will not throw rate limit errors — for example, because you are the only one using a self-hosted backend like Ollama — the following combination can make sense:
+
+- Adaptive Rate Limiting: Off
+- Tasks / min: set to the maximum
+- Allow Concurrency: Off
+:::

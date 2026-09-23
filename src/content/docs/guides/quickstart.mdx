@@ -24,13 +24,15 @@ If this is your first time, follow the steps below. Start with no more than 10 d
     Your API key cannot be seen by other users in the frontend. However, your administrator and anyone with backend access can see it. Make sure you trust your platform. Set a spending limit on your key before using it.
     :::
 
-    An endpoint connects Batch4LLM to an LLM provider. To create one, open the **Sidebar** and click `Endpoints`. Then click `Add Endpoint` in the top right corner.
+    An endpoint connects Batch4LLM to an LLM provider. To create one, in the **Sidebar** on the left, click `Endpoints`. Then click `Add Endpoint` in the top right corner.
 
-    In the pop-up, select `Gemini` as the provider. Enter `"gemini"` as the name and paste your Gemini API key. Click `Test connection` to verify it works. Once the test passes, click `Add Endpoint`.
+    In the pop-up, select `Gemini` as the provider. Enter `"gemini"` as the name and paste your Gemini API key. Click `Add Endpoint`. The endpoint is validated in the backend before it's added. If there's a problem with the API key or the endpoint, the error is shown immediately (see [Endpoint connection errors](/guides/error_handling/#endpoint-connection-errors)).
 
 2. ### Create a prompt
 
-    A prompt is the instruction sent to the model for each document. Open the **Sidebar** and click `Prompts`. Then click `Add Prompt` in the top right corner.
+    A prompt is the instruction sent to the model for each document. In the **Sidebar** on the left, click `Prompts`. Then click `Add Prompt` in the top right corner.
+
+    You'll be asked to choose between `Simple` and `Complex`. Choose `Simple` — it sends your text as the prompt exactly as you enter it. `Complex` can be used later to build prompts made up of multiple sub-tasks, giving the LLM instructions in several separate steps.
 
     Enter `"Retrieve pdf title"` as the name. Paste the following into the text box:
 
@@ -40,7 +42,7 @@ If this is your first time, follow the steps below. Start with no more than 10 d
     any formatting or additional information.
     ```
 
-    Leave all other settings as they are and click `Add Prompt`.
+    Leave all other settings as they are and click `Add`. Your new prompt will now appear in the overview.
 
 3. ### Upload your documents
 
@@ -52,19 +54,31 @@ If this is your first time, follow the steps below. Start with no more than 10 d
 
     A batch processes your documents using your chosen endpoint and prompt. Go to `Batches` in the **Sidebar** and click `Create Batch`.
 
-    In the pop-up, select `"gemini"` from the first dropdown. Then pick a model — for this guide, select `gemini-2.5-flash`. Next, select the prompt you just created. For the file reader, choose `pymupdf_default`. It works well for most standard PDFs.
+    In the pop-up, click on `Select a model...`. For this guide, select `gemini-2.5-flash`. You can also use the search bar to look for a specific model.
+
+    Then click on `Select files...`, click the `My documents` tag you assigned earlier, and click `Done` in the bottom right corner.
+
+    Next, select the prompt you just created. For the file handling, leave the setting on `Upload`. This uploads your documents as they are, and the model provider processes them directly on their end.
+
+    :::caution
+    Upload is not available for all endpoints and file types. For example, DeepSeek only supports Upload for images. If Upload does not work for your endpoint or file type, select a **File Reader** instead.
+    :::
 
     Leave all other settings as they are and click `Start Batch`. Wait for the batch to finish.
 
     :::note[What happens in the backend?]{icon="server"}
-    The backend reads each document using the selected PDF reader. It then sends one API request per document, using your chosen prompt. Each document is processed in its own context window. This means you cannot use the prompt to compare or combine multiple documents.
+    With Upload, the backend sends each document directly to the model provider, together with your chosen prompt. With a File Reader, the backend extracts the text from each document first and sends that instead. Either way, one API request is sent per document, and each document is processed in its own context window. This means you cannot use the prompt to compare or combine multiple documents.
     :::
 
-    When the batch is done, you will see a green indicator. Click on the batch to see a list of all documents and their status.
+    When the batch is done, you will see a green indicator. Click on the batch and select `View details` to get an overview of all the files processed, the LLM answers, and the token and cost usage.
 
 5. ### Export your results
 
-    Click the `Export Icon` on your finished batch. Leave the settings in the pop-up as they are and click `Export`. Allow downloads in your browser if prompted.
+    Return to the Batch Overview by clicking the arrow in the top left corner. Then, in the same column as `View Details`, select `Export` on your finished batch.
+
+    Leave the settings in the pop-up as they are and click `Export`. Allow downloads in your browser if prompted.
+
+    You will receive a CSV file with one row per document. The LLM answer — in this case, the PDF title — is included as its own column.
 
 </Steps>
 

@@ -1,0 +1,143 @@
+---
+title: Prompts
+---
+
+A prompt is the instruction sent to the model for each document. This guide shows how to design prompts that produce clean, structured output, and how to get multiple rows of output per document using long format.
+
+## Structured outputs
+
+Use structured JSON output when you want to extract specific fields from your documents for further processing. Make sure your prompt also tells the model how to format the output.
+
+In this example, we extract the following fields: title, authors, published date, category, page count, and whether the document contains pictures. Here's the prompt:
+
+```
+Please extract the following information from the provided document. Do not use any other sources.
+
+The document title. All authors separated by a comma — if there are no authors, set the field to null. The date the document was
+published in the format "DD.MM.YYYY" — if unknown, set the field to null. The number of pages. Whether the document includes any pictures.
+
+Example JSON output:
+{
+    "title": "A document title",
+    "authors": "Ben, Lisa",
+    "published_date": "10.12.2004",
+    "page_numbers": 14,
+    "pictures_included": true
+}
+```
+
+It's important to tell the model exactly how to return the data. When using JSON output, including the word `json` in your prompt is often required.
+
+### Export the data
+
+Once your batch is done, the model's consistent JSON output can be converted into a spreadsheet. Click the `Export Icon` and select `json long format` as the interpretation method.
+
+Here's what the table looks like for this example:
+
+| file_name         | _title                 | _authors  | _published_date | _page_numbers | _pictures_included |
+|-------------------|------------------------|-----------|-----------------|---------------|--------------------|
+| **example-1.pdf** | A document title       | Ben, Lisa | 10.12.2004      | 14            | True               |
+| **example-2.pdf** | Another document title | null      | null            | 1             | False              |
+| **example-3.pdf** | Beautiful title        | Fine      | 17.02.2016      | 7             | True               |
+
+:::note[Why the underscores _ before column names?]
+Underscores are added automatically to avoid naming conflicts with system columns.
+
+For example, if your output had a field called `id`, it would clash with the system `id` column. To keep things clear: columns **without** an underscore contain system information (like model name and temperature), while columns **with** an underscore come from your structured output.
+:::
+
+## Long format
+
+By default, each document produces one row of output. Sometimes you want multiple rows per document instead — for example, one row per question you asked. This is called **long format**. It's useful in scientific evaluation when you need to compare different data sets.
+
+There are two ways to get long format output:
+
+### A) Multi-row interpretations
+
+Instruct the model itself to return one answer per row, all in a single request.
+
+Say you have three questions:
+1. Is this a scientific document?
+2. Does this document provide sources?
+3. Was this document published before 2020?
+
+#### Target output
+
+| file_name         | _id | _answer |
+|-------------------|-----|---------|
+| **example-1.pdf** | 1   | True    |
+| **example-1.pdf** | 2   | False   |
+| **example-1.pdf** | 3   | False   |
+| **example-2.pdf** | 1   | False   |
+| **example-2.pdf** | 2   | True    |
+| **example-2.pdf** | 3   | False   |
+
+#### Prompt instructions
+
+To put each answer in its own row, instruct the model to return a JSON array with one element per question.
+
+Here's an example prompt:
+
+```
+Please answer the following questions.
+1. Is this a scientific document?
+2. Does this document provide sources?
+3. Was this document published before 2020?
+
+Return your answers in this JSON format:
+{
+    [
+        { "id": 1, "answer": True  },
+        { "id": 2, "answer": False },
+        { "id": 3, "answer": True  }
+    ]
+}
+```
+
+### B) Prompts with multiple steps
+
+Instead of asking the model to produce several rows in one response, split your prompt into several steps (complex prompts), each sent as its own request. Each step gets its own row.
+
+Complex prompts let you split one prompt into several steps, each with its own context. This is useful for complex tasks or smaller models that struggle with multiple questions at once.
+
+To get started, click `+ Add Prompt` and select `Complex` instead of `Simple`. You can then choose how you want to build it:
+
+- **Visual Editor** — fill in the pre-prompt, post-prompt, and each step through dedicated fields.
+- **YAML** — write the configuration yourself. Use the following format:
+
+```yaml
+multi_prompt_v1:
+  pre: "You are a helpful assistant."
+  post: "Please only refer to the provided document."
+  tasks:
+    - id: step_1
+      prompt: |
+        What is the document title?
+    - id: step_2
+      prompt: |
+        Does the document have any authors?
+```
+
+Both options produce the same result — pick whichever is more convenient. Instead of one request per document, two API requests will be made. For this example, the prompts will look like this:
+
+**First prompt**
+```
+You are a helpful assistant.
+What is the document title?
+Please only refer to the provided document.
+```
+
+**Second prompt**
+```
+You are a helpful assistant.
+Does the document have any authors?
+Please only refer to the provided document.
+```
+
+:::caution
+Complex prompts increase your costs. In this example, costs double because two requests are made per document.
+:::
+
+#### What is the ID for?
+
+The ID helps you identify which prompt produced which result. It appears in the `prompt_marker` column when you export your data.
